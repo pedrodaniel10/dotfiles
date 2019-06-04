@@ -62,6 +62,15 @@ ZSH_THEME="ubuntu"
 
 #TMUX
 ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOCONNECT=false
+
+# Colors for ls
+eval "$(dircolors ~/.dircolors)"
+
+# Fix escape sequence for Control + l (just clears the terminal intead of clearing also the scrolling history)
+clear_window () { clear; zle redisplay }
+zle -N clear_window   
+bindkey '' clear_window
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -80,11 +89,11 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='mvim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
