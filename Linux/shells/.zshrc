@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/pedrodaniel10/.oh-my-zsh"
+export ZSH="/home/pedrodaniel10/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -68,16 +68,22 @@ ZSH_TMUX_AUTOCONNECT=false
 eval "$(dircolors ~/.dircolors)"
 
 # Fix escape sequence for Control + l (just clears the terminal intead of clearing also the scrolling history)
-clear_window () { clear; zle redisplay }
-zle -N clear_window   
-bindkey '' clear_window
+#clear_window () { clear; zle redisplay }
+#zle -N clear_window   
+#bindkey '' clear_window
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git tmux)
+plugins=(
+ git 
+ tmux
+ vi-mode
+ zsh-syntax-highlighting
+)
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -98,6 +104,18 @@ fi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# Change environment variables
+export EDITOR=vim
+export KEYTIMEOUT=1
+
+# Command syntax highlighting
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
+
+# 10ms for key sequences
+KEYTIMEOUT=1
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -107,3 +125,4 @@ hash -d home="/mnt/c/Users/pedrodaniel10"
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias vmrun="~/.scripts/vmrun"

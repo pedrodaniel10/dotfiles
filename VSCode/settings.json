@@ -1,0 +1,39 @@
+{
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\wsl.exe",
+    "tslint.configFile": "C:\\\\Users\\\\pedrodaniel10\\\\Documents\\\\TsLint\\\\tslint.json",
+    "files.eol": "\n",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+
+    // Prettier Now
+    "prettier.singleQuote": false,
+
+    // C/C++ Formatting => https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0, UseTab: ForIndentation, TabWidth: 4, ColumnLimit: 120 }",
+    "editor.suggestSelection": "first",
+    "C_Cpp.updateChannel": "Insiders",
+
+    // Auto save
+    "files.autoSave": "off",
+    "window.zoomLevel": 0,
+    "editor.lineNumbers": "relative",
+
+    // Vim
+    "vim.statusBarColorControl": true,
+    "vim.statusBarColors.normal": [
+        "#afd700",
+        "#005f00"
+    ],
+    "vim.statusBarColors.insert": ["#005f87", "#87d7ff"],
+    "vim.statusBarColors.visual": [ "#ffaf00", "#875f00"],
+    "vim.statusBarColors.visualline": [ "#ffaf00", "#875f00"],
+    "vim.statusBarColors.visualblock": [ "#ffaf00", "#875f00"],
+    "vim.statusBarColors.replace": "#d70001",
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#ffaf00",
+        "statusBar.noFolderBackground": "#ffaf00",
+        "statusBar.debuggingBackground": "#ffaf00",
+        "statusBar.foreground": "#875f00"
+    },
+    "terminal.integrated.fontFamily": "UbuntuMono Nerd Font"
+}

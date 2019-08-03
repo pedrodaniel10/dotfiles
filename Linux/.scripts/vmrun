@@ -1,0 +1,196 @@
+#!/bin/bash
+
+vmrun_path="/mnt/c/Program\ Files\ \(x86\)/VMware/VMware\ Workstation"
+vmrun_name="/vmrun.exe"
+vm_paths="/mnt/c/Users/pedrodaniel10/Documents/Virtual\ Machines"
+vm_path_prefix="C:\\Users\\pedrodaniel10\\Documents\\Virtual Machines"
+vm_path=""
+
+guest_user=""
+guest_password=""
+
+PARAMS=""
+
+function print_help() {
+	printf "usage: vmrun [-h] [-gu <username>] [-gp <password>] command <arguments>\n"
+	printf "\t%-35s %-50s\n" "-h,--help" "Prints this message"
+	printf "\t%-35s %-50s\n" "-gu,--guest-user <username>" "Username in guest OS."
+	printf "\t%-35s %-50s\n" "-gp,--guest-password <password>" "Password in guest OS."
+	printf "\n"
+	printf "%-25s %-40s %-20s\n" "POWER COMMANDS" "ARGUMENTS" "DESCRIPTION"
+	printf "%-25s %-40s %-20s\n" "--------------" "---------" "-----------"
+	printf "%-25s %-40s %-20s\n" "start" "<vm-name> [gui|nogui]" "Starts a VM"
+	printf "%-25s %-40s %-20s\n" "stop" "<vm-name> [hard|soft]" "Stops a VM"
+	printf "%-25s %-40s %-20s\n" "reset" "<vm-name> [hard|soft]" "Resets a VM"
+	printf "%-25s %-40s %-20s\n" "suspend" "<vm-name> [hard|soft]" "Suspends a VM"
+	printf "%-25s %-40s %-20s\n" "pause" "<vm-name>" "Pauses a VM"
+	printf "%-25s %-40s %-20s\n" "unpause" "<vm-name>" "Unpauses a VM"
+	printf "\n"
+	printf "%-25s %-40s %-20s\n" "GENERAL COMMANDS" "ARGUMENTS" "DESCRIPTION"
+	printf "%-25s %-40s %-20s\n" "----------------" "---------" "-----------"
+	printf "%-25s %-40s %-20s\n" "list" "" "Lists all available and running VM's"
+	printf "%-25s %-40s %-20s\n" "upgradevm" "<vm-name>" "Upgrades a VM to current version of VH"
+	printf "%-25s %-40s %-20s\n" "installTools" "<vm-name>" "Install Tools in Guest"
+	printf "%-25s %-40s %-20s\n" "checkToolsState" "<vm-name>" "Check the current Tools state"
+	printf "%-25s %-40s %-20s\n" "deleteVM" "<vm-name>" "Deletes a VM"
+	printf "%-25s %-40s %-20s\n" "clone" "<vm-name> <new-vm-name>" "Creates a copy of the VM"
+	printf "%-25s %-40s %-20s\n" "" "<full | linked [snapshot-name]>" ""
+	printf "\n"
+	printf "%-25s %-40s %-20s\n" "SNAPSHOT COMMANDS" "ARGUMENTS" "DESCRIPTION"
+	printf "%-25s %-40s %-20s\n" "-----------------" "---------" "-----------"
+	printf "%-25s %-40s %-20s\n" "listSnapshots" "<vm-name> [showTree]" "List all snapshots in a VM"
+	printf "%-25s %-40s %-20s\n" "snapshot" "<vm-name> <snapshot-name>" "Create a snapshot of a VM"
+	printf "%-25s %-40s %-20s\n" "deleteSnapshot" "<vm-name> <snapshot-name>" "Remove a snapshot from a VM"
+	printf "%-25s %-40s %-20s\n" "" "[andDeleteChildren]" ""
+	printf "%-25s %-40s %-20s\n" "revertToSnapshot" "<vm-name> <snapshot-name>" "Remove a snapshot from a VM"
+	printf "\n"
+	printf "%-25s %-40s %-20s\n" "GUEST OS COMMANDS" "ARGUMENTS" "DESCRIPTION"
+	printf "%-25s %-40s %-20s\n" "-----------------" "---------" "-----------"
+	printf "%-25s %-40s %-20s\n" "runProgramInGuest" "<vm-name> [-noWait |" "Runs a program in Guest OS"
+	printf "%-25s %-40s %-20s\n" "" "-activeWindow | -interactive]" ""
+	printf "%-25s %-40s %-20s\n" "" "<program-path> [<program-arguments>]" ""
+	printf "%-25s %-40s %-20s\n" "runScriptInGuest" "<vm-name> [-noWait |" "Runs a script in Guest OS"
+	printf "%-25s %-40s %-20s\n" "" "-activeWindow | -interactive]" ""
+	printf "%-25s %-40s %-20s\n" "" "<interpreter-path> [<script-text>]" ""
+	printf "%-25s %-40s %-20s\n" "setSharedFolderState" "<vm-name> <share-name>" "Modify a Host-Guest shared folder"
+	printf "%-25s %-40s %-20s\n" "" "<host-path> <writable | readonly>" ""
+	printf "%-25s %-40s %-20s\n" "addSharedFolder" "<vm-name> <share-name> <new-host-path>" "Add a Host-Guest shared folder"
+	printf "%-25s %-40s %-20s\n" "removeSharedFolder" "<vm-name> <share-name>" "Remove a Host-Guest shared folder"
+	printf "%-25s %-40s %-20s\n" "listProcessesInGuest" "<vm-name>" "List running processes in Guest OS"
+	printf "%-25s %-40s %-20s\n" "killProcessesInGuest" "<vm-name> <pid>" "Kill a process in Guest OS"
+	printf "%-25s %-40s %-20s\n" "CopyFileFromHostToGuest" "<vm-name> <path-host> <path-guest>" "Copy a file from host OS to guest OS"
+	printf "%-25s %-40s %-20s\n" "CopyFileFromGuestToHost" "<vm-name> <path-guest> <path-host>" "Copy a file from guest OS to host OS"
+	printf "%-25s %-40s %-20s\n" "fileExistsInGuest" "<vm-name> <file-path>" "Check if a file exists in Guest OS"
+	printf "%-25s %-40s %-20s\n" "deleteFileInGuest" "<vm-name> <file-path>" "Delete a file in Guest OS"
+	printf "%-25s %-40s %-20s\n" "CreateTempfileInGuest" "<vm-name>" "Create a temporary file in Guest OS"
+	printf "%-25s %-40s %-20s\n" "renameFileInGuest" "<vm-name> <original-name> <new-name>" "Rename a file in Guest OS"
+	printf "%-25s %-40s %-20s\n" "directoryExistsInGuest" "<vm-name> <directory-path>" "Check if a directory exists in Guest OS"
+	printf "%-25s %-40s %-20s\n" "createDirectoryInGuest" "<vm-name> <directory-path>" "Create a directory in Guest OS"
+	printf "%-25s %-40s %-20s\n" "deleteDirectoryInGuest" "<vm-name> <directory-path>" "Delete a directory in Guest OS"
+	printf "%-25s %-40s %-20s\n" "listDirectoryInGuest" "<vm-name> <directory-path>" "List a directory in Guest OS"
+	printf "%-25s %-40s %-20s\n" "typeKeystrokesInGuest" "<vm-name> <keystroke-string>" "Type Keystrokes in Guest OS"
+	printf "%-25s %-40s %-20s\n" "connectNamedDevice" "<vm-name> <device-name>" "Connect the named device in the Guest OS"
+	printf "%-25s %-40s %-20s\n" "disconnectNamedDevice" "<vm-name> <device-name>" "Disconnect the named device in the Guest OS"
+	printf "%-25s %-40s %-20s\n" "captureScreen" "<vm-name> <path-host>" "Capture the screen of the VM to a local file"
+	printf "%-25s %-40s %-20s\n" "writeVariable" "<vm-name> [runtimeConfig | guestEnv |" "Write a variable in the VM state"
+	printf "%-25s %-40s %-20s\n" "" "guestVar] <name> <value>" ""
+	printf "%-25s %-40s %-20s\n" "readVariable" "<vm-name> [runtimeConfig | guestEnv |" "Read a variable in the VM state"
+	printf "%-25s %-40s %-20s\n" "" "guestVar] <name>" ""
+	printf "%-25s %-40s %-20s\n" "getGuestIPAddress" "<vm-name> [-wait]" "Gets the IP address of the guest"
+}
+
+function get_vm_path() {
+	vm_availables=(`eval ls $vm_paths`)
+
+	for vm in "${vm_availables[@]}"
+	do
+		if [ "$vm" == $1 ]; then
+			eval "vm_path=\"'$vm_path_prefix\\$1\\$1.vmx'\""
+			break
+		else
+			echo "Error: It doesn't exist a VM with the name $1"
+			exit 0
+		fi
+	done
+}
+
+# parse arguments for flags
+while (( "$#" ))
+do
+	case "$1" in
+		-h|--help)
+			print_help
+			exit 1
+			;;
+		-gu|--guest-user)
+			guest_user=$2
+			echo $guest_user
+			shift 2
+			;;
+		-gp|--guest-password)
+			guest_password=$2
+			echo $guest_password
+			shift 2
+			;;
+		--) # end argument parsing
+			shift
+			break
+			;;
+		-*|--*) # unknown flags, might be command flags
+			PARAMS="$PARAMS $1"
+			shift
+			;;
+		*) # preserve positional arguments
+			PARAMS="$PARAMS $1"
+			shift
+			;;
+	esac
+done
+
+# set positional arguments in their proper place
+eval set -- "$PARAMS"
+
+# print help if no command provided
+if [ "$#" -eq 0 ]
+then
+	print_help
+	exit 1
+fi
+
+# execute commands
+case $1 in
+	#### POWER COMMANDS
+	"start")
+		if [[ "$#" -lt 2 ]]
+	       	then 
+			eval echo "$1: Missing parameters."
+			print_help | grep "$1"
+			exit 0
+		fi
+		
+		case $3 in
+			""|"gui"|"nogui")
+				get_vm_path $2
+				echo  "$vmrun_path$vmrun_name $1 $vm_path $3"
+				;;
+			*)
+				eval echo "$1: Wrong parameters."
+				print_help | grep "$1"
+				exit 0
+				;;
+		esac
+		;;
+	"stop"|"reset"|"suspend")
+		if [[ "$#" -lt 2 ]]
+	       	then 
+			eval echo "$1: Missing parameters."
+			print_help | grep "$1"
+			exit 0
+		fi
+		
+		case $3 in
+			""|"hard"|"soft")
+				get_vm_path $2
+				echo  "$vmrun_path$vmrun_name $1 $vm_path $3"
+				;;
+			*)
+				eval echo "$1: Wrong parameters."
+				print_help | grep "$1"
+				exit 0
+				;;
+		esac
+		;;
+	"pause"|"unpause")                                                             	
+        	if [[ "$#" -ne 2 ]]
+        	then 
+        		eval echo "$1: Wrong parameters."
+        		print_help | grep "^$1"
+        		exit 0
+        	fi
+        	
+		get_vm_path $2
+		echo  "$vmrun_path$vmrun_name $1 $vm_path"
+        	;;
+	#### SNAPSHOTS COMMANDS
+esac
+
