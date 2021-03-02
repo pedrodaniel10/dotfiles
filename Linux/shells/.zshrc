@@ -1,8 +1,13 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+
 # Path to your oh-my-zsh installation.
 export ZSH="/home/pedrodaniel10/.oh-my-zsh"
+
+# MiniZinc
+export PATH=${HOME}/MiniZincIDE-2.3.2-bundle-linux/bin:${PATH}
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -107,6 +112,7 @@ fi
 # Change environment variables
 export EDITOR=vim
 export KEYTIMEOUT=1
+export DISPLAY=:0
 
 # Command syntax highlighting
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue,underline
@@ -116,12 +122,17 @@ ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
 # 10ms for key sequences
 KEYTIMEOUT=1
 
+# Git credentials
+git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 hash -d home="/mnt/c/Users/pedrodaniel10"
-
+hash -d github="/mnt/c/Users/pedrodaniel10/Documents/GitHub"
+hash -d desktop="/mnt/c/Users/pedrodaniel10/Desktop"
+hash -d thesis="/mnt/c/Users/pedrodaniel10/Desktop/Thesis"
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"

@@ -5,6 +5,19 @@ Plug 'scrooloose/nerdtree'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'justinmk/vim-syntax-extra'
 Plug 'matze/vim-move'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'yggdroot/indentline'
+Plug 'ryanoasis/vim-devicons'
+" Vimtex
+Plug 'lervag/vimtex'
+" Snipets
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+let g:deoplete#enable_at_startup = 1
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 call plug#end()
 
 " Colorscheme
@@ -66,3 +79,43 @@ colorscheme codedark
 
 	map <Esc>[1;5B <C-Down>
 	map! <Esc>[1;5B <C-Down>
+" Change background
+	highlight Normal ctermbg=None
+	highlight NonText ctermbg=None
+	highlight LineNr  ctermfg=208 ctermbg=None
+	highlight EndBuffer  ctermfg=208 ctermbg=None
+	highlight EndOfBuffer  ctermfg=208 ctermbg=None
+
+" airline
+	let g:airline#extensions#tabline#enabled = 1
+	let g:airline_solarized_bg='papercolor'
+	let g:airline_powerline_fonts = 1
+
+" Vimtex autocompile
+	let g:vimtex_latexmk_continuous = 1
+
+" Vimtex ignore warnings 
+let g:vimtex_quickfix_latexlog = {
+  \ 'ignore_filters': ['Underfull', 'Unused'] 
+\}
+
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+				\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=0 concealcursor=niv
+endif
+
